@@ -1,0 +1,16 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /votedemo
+  jsp-servlet:
+    init-parameters:
+      development: true
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+mybatis:
+  mapper-locations: classpath*:com/baizhi/vote/mapper/*Mapper.xml
+
+
