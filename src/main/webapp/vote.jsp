@@ -1,64 +1,48 @@
-<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-<%
-	response.setHeader("Pragma", "No-cache");
-	response.setHeader("Cache-Control", "no-cache");
-	response.setDateHeader("Expires", 0);
-	response.setContentType("text/html;charset=UTF-8");
-%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>参与投票</title>
-<link type="text/css" rel="stylesheet" href="css/style.css" />
-</head>
-<body>
-<jsp:include page="top.jsp" />
-<div id="vote" class="wrap">
-	<h2>参与投票</h2>
-	<ul class="list">
-		<li>
-			<h4></h4>
-			<p class="info">共有  个选项，已有  个网友参与了投票。</p>
-			<form method="post" action="#" onsubmit="return validate();">
-				<ol>
-					<li><input <%--<s:if test="subject.type==2">--%>type="checkbox"<%--</s:if><s:else>--%>type="radio"<%--</s:else>--%> name="options"  value="<%--<s:property value='id'/>--%>"/><%--<s:property value="name"/>--%></li>
-				</ol>
-				<p class="voteView">
-					<button>投票</button>
-					<a href="#">查看</a>
-				</p>
-			</form>
-		</li>
-	</ul>
-</div>
-<div id="footer" class="wrap">
-	百知 &copy; 版权所有
-</div>
-<link type="text/css" rel="stylesheet" href="js/jqueryui/themes/base/jquery-ui.css" />
-<script type="text/javascript" src="js/jquery-1.8.3.js"></script>
-<script type="text/javascript" src="js/jqueryui/jquery-ui.js"></script>
-<script>
-$(function(){
-	$(".voteView").children("button").button({
-		icons: {
-			primary: "ui-icon-locked"
-		}
-	}).next().button({
-		icons: {
-			primary: "ui-icon-locked"
-		}
-	});
-})
+    <title>参与投票</title>
+    <script src="${pageContext.request.contextPath}/js/jquery.min1.3.5.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery.easyui.min1.3.5.js"></script>
+    <script src="${pageContext.request.contextPath}/js/easyui-lang-zh_CN1.3.5.js"></script>
 
-function validate(){
-	var options = $("input[name='options']:checked").val();
-	if(options== null || options=="undefined" || options.length==0){
-		alert("请至少选择一个投票项！");
-		return false;
-	}
-	return true;
-}
-</script>
+    <link href="${pageContext.request.contextPath}/themes1.3.5/icon.css" rel="stylesheet" type="text/css"/>
+    <link href="${pageContext.request.contextPath}/themes1.3.5/default/easyui.css" rel="stylesheet" type="text/css"/>
+</head>
+    <script>
+        $(function () {
+            $("input[value='投票']").click(function () {
+                $("#optionForm").form("submit",{
+                    url:"${pageContext.request.contextPath}/voteItem/addVoteItem.do",
+                    success:function (data) {
+                        if(data=="true"){
+                            $.messager.alert("投票结果提示","投票成功","info");
+                        }else {
+                            $.messager.alert("投票结果提示","投票失败","warning");
+                        }
+                    }
+                })
+
+            })
+        })
+    </script>
+<body>
+
+        主题：${voteSubject.vs_title}<br/>
+        共有${option_number}个选项,已有${user_number}个网友参与了投票<br/>
+        <form id="optionForm" method="post">
+            <input type="hidden" name="vs_id" value="${voteSubject.vs_id}"/>
+            <c:forEach items="${voteSubject.voteOptionList}" var="voteOption" varStatus="vs">
+                <c:if test="${voteSubject.vs_type==0}">
+                    ${voteOption.vo_order}. &nbsp;<input type="radio" name="voteItemList[0].voteOption.vo_id" value="${voteOption.vo_id}"/>${voteOption.vo_option}<br/>
+                </c:if>
+                <c:if test="${voteSubject.vs_type==1}">
+                    ${voteOption.vo_order}. &nbsp;<input type="checkbox" name="voteItemList[${vs.index}].voteOption.vo_id" value="${voteOption.vo_id}"/>${voteOption.vo_option}<br/>
+                </c:if>
+            </c:forEach>
+            <input type="button" value="投票"/>
+        </form>
+    </div>
 </body>
 </html>

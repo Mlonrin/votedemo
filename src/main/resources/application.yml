@@ -1,7 +1,6 @@
 server:
   port: 8088
-  servlet:
-    context-path: /votedemo
+  context-path: /votedemo
   jsp-servlet:
     init-parameters:
       development: true
@@ -10,16 +9,14 @@ spring:
     view:
       prefix: /
       suffix: .jsp
+
   profiles:
-    active: test
+    active: testoracle
+
 mybatis:
   mapper-locations: classpath*:com/baizhi/vote/mapper/*Mapper.xml
-spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/cmfz?useUnicode=true&characterEncoding=utf8
-    username: root
-    password: root
+  type-aliases-package: com.baizhi.vote.entity
+
+
 
 

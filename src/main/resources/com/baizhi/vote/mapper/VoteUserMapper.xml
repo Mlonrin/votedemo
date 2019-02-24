@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baizhi.vote.dao.VoteUserDao">
+
+    <insert id="insert">
+        insert into VOTE_USER values (VOTE_USER_SRQ.nextval,#{vu_user_name},#{vu_password},0)
+    </insert>
+
+    <select id="selectOne" resultType="VoteUser">
+        select * from VOTE_USER where VU_USER_NAME = #{vu_user_name} and VU_PASSWORD = #{vu_password}
+    </select>
+
+</mapper>
+

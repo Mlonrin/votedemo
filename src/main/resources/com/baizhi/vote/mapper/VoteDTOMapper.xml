@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baizhi.vote.dao.VoteDTODao">
+
+    <select id="selectByTitle" resultType="VoteDTO">
+        select *
+          from (select t5.*, rownum r
+                  from (select t3.vs_id,
+                               t3.vs_title,
+                               t3.user_number,
+                               count(VO_OPTION) option_number
+                          from (select t1.vs_id, t1.vs_title, count(VU_USER_ID) user_number
+                                  from vote_subject t1
+                                  left join (select distinct t.vu_user_id, t.vs_id
+                                              from vote_item t) t2
+                                    on t1.vs_id = t2.vs_id
+                                  where t1.VS_STATUS = 0
+                                 <!--where t1.vs_id not in
+                                       (select vs_id
+                                          from vote_item
+                                         where t2.vu_user_id = #{vu_user_id})-->
+
+                                         <if test="title!=null">
+                                             and t1.vs_title like #{title}
+                                         </if>
+
+                                 group by t1.vs_id, t1.vs_title) t3
+                          left join vote_option t4
+                            on t3.vs_id = t4.vs_id
+                         group by t3.vs_id, t3.user_number, t3.vs_title) t5)
+        where r between #{start} and #{end}
+    </select>
+
+    <select id="getCount" resultType="int">
+        select count(1) from VOTE_SUBJECT
+        where VS_STATUS = 0
+
+            <if test="title!=null">
+                and vs_title like #{title}
+            </if>
+
+    </select>
+
+</mapper>
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baizhi.vote.dao.VoteItemDao">
+
+
+    <insert id="insert">
+        insert into vote_item
+        select vote_item_srq.nextval,t.* from
+        <foreach collection="voteItemList" item="voteItem" open="(" separator="union" close=") t">
+            select #{vu_user_id} vu_user_id,#{vs_id} vs_id,#{voteItem.voteOption.vo_id} vo_id from dual
+        </foreach>
+    </insert>
+
+</mapper>
+

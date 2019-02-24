@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.baizhi.vote.dao.VoteSubjectDao">
+
+    <insert id="insert">
+        <selectKey keyProperty="vs_id" resultType="int" order="BEFORE">
+            select VOTE_SUBJECT_SRQ.nextval from dual
+        </selectKey>
+        insert into VOTE_SUBJECT values (#{vs_id},#{vs_title},#{vs_type},#{vs_status})
+    </insert>
+
+    <update id="multiDelete">
+        update VOTE_SUBJECT set VS_STATUS = 1 where VS_ID in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectOne" resultMap="rmp1">
+        select t1.vs_id,
+               t1.vs_title,
+               t1.vs_type,
+               t2.vo_id,
+               t2.vo_option,
+               t2.vo_order
+      from vote_subject t1
+      left join vote_option t2
+      on t1.vs_id = t2.vs_id
+      where t1.vs_id = #{vs_id}
+      order by t2.VO_ORDER
+    </select>
+
+    <resultMap id="rmp1" type="VoteSubject">
+        <result column="vs_id" property="vs_id"/>
+        <result column="vs_title" property="vs_title"/>
+        <result column="vs_type" property="vs_type"/>
+        <collection property="voteOptionList" ofType="VoteOption">
+            <result column="vo_id" property="vo_id"/>
+            <result column="vo_option" property="vo_option"/>
+            <result column="vo_order" property="vo_order"/>
+        </collection>
+    </resultMap>
+
+</mapper>
+

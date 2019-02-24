@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
 
-
     <!--代表日志展示的位置
         name: 输出的别名
         class:以哪种方式输出
